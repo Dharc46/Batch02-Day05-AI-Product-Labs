@@ -177,6 +177,7 @@ Owner kiểm thử path này là thành viên phụ trách Test / failure path.<
 
 <section id="architecture" class="card">
   <div class="section-title"><div class="icon">🏗️</div><h2>8. Architecture & tech stack</h2></div>
+  <p class="lead">Dùng lại tech stack GroupBite cũ, không dùng Laravel/Docker/Sail.</p>
   <div class="flow">
     <div class="step">User Input</div>
     <div class="step">FastAPI Endpoint</div>
@@ -204,19 +205,25 @@ Owner kiểm thử path này là thành viên phụ trách Test / failure path.<
 
 <section id="owner" class="card">
   <div class="section-title"><div class="icon">👥</div><h2>9. Owner plan cho sáng Day 06</h2></div>
+  <div class="callout bluebox" style="margin-bottom:18px">
+    <strong>⚠️ Dependency bắt buộc:</strong> Người 1 push <code>vin_restaurants.json</code> schema trong <strong>30 phút đầu</strong> → Người 2 và 3 mới bắt đầu code được. Người 4 bắt đầu static UI song song, không cần đợi API.
+  </div>
   <div class="owner-grid">
-    <div class="owner"><strong>Người 1 — Research / Evidence</strong><span>Kiểm chứng 3 user giả định, chụp self-use screenshots, hoàn thiện evidence pack.</span></div>
-    <div class="owner"><strong>Người 2 — SPEC / Data</strong><span>Chốt thin spec, tạo <code>/data/vin_restaurants.json</code> và schema constraint.</span></div>
-    <div class="owner"><strong>Người 3 — Prototype / AI</strong><span>Làm parser, filter, scoring, explanation và fallback handler bằng FastAPI/Python.</span></div>
-    <div class="owner"><strong>Người 4 — UI / Demo</strong><span>Dựng Streamlit/Next.js UI, card Top 3, correction button, demo script và screenshots.</span></div>
+    <div class="owner"><strong>Người 1 — Data + Glue</strong><span>Push JSON schema ngay (30 phút đầu). Điền 30–40 mock restaurants. Dựng FastAPI endpoints. Kết nối parser + ranking vào 1 API duy nhất. Hoàn thiện evidence pack (đã xong phần lớn).</span></div>
+    <div class="owner"><strong>Người 2 — Parser + Test</strong><span>Preference parser (text → constraint struct). Constraint classifier (hard vs soft). Low-confidence / clarification flow. Viết <code>test_4_paths.py</code> cho cả 4 path: Happy, Low-confidence, Failure, Correction.</span></div>
+    <div class="owner"><strong>Người 3 — AI + Ranking</strong><span>Hard constraint filter. Weighted scoring engine. LLM explanation generator. Fallback handler: nới budget, đổi loại món, kiosk/combo thay thế. Không lo parser và API — tập trung AI core.</span></div>
+    <div class="owner"><strong>Người 4 — UI + Demo</strong><span>Bắt đầu bằng static mockup (hardcode Top 3 giả) để không block. Dựng card Top 3 + fit score + trade-off + correction button. Giữa ngày swap vào real API. Demo script + screenshots cuối ngày.</span></div>
   </div>
   <table>
-    <tr><th>Thành viên</th><th>Việc phụ trách</th><th>Bằng chứng cần có trong repo</th></tr>
-    <tr><td>Người 1</td><td>Research / evidence</td><td><code>/docs/evidence-pack.html</code>, <code>/assets/screenshots/</code></td></tr>
-    <tr><td>Người 2</td><td>SPEC + data schema</td><td><code>/docs/thin-spec.html</code>, <code>/data/vin_restaurants.json</code></td></tr>
-    <tr><td>Người 3</td><td>Prototype logic</td><td><code>/src/preference_parser.py</code>, <code>/src/ranking_engine.py</code>, <code>/tests/test_4_paths.py</code></td></tr>
-    <tr><td>Người 4</td><td>UI + demo</td><td><code>/app.py</code> hoặc <code>/frontend/</code>, <code>/docs/demo_script.md</code></td></tr>
+    <tr><th>Thành viên</th><th>Việc phụ trách</th><th>Deliverable trong repo</th><th>Ước lượng</th></tr>
+    <tr><td><strong>Người 1</strong><br><small>Data + Glue</small></td><td>JSON schema → mock data → FastAPI → integration</td><td><code>/data/vin_restaurants.json</code><br><code>/src/api.py</code><br><code>/docs/evidence-pack.html</code></td><td>~6–7h</td></tr>
+    <tr><td><strong>Người 2</strong><br><small>Parser + Test</small></td><td>Preference parser, constraint classifier, low-confidence flow, test suite</td><td><code>/src/preference_parser.py</code><br><code>/src/constraint_classifier.py</code><br><code>/tests/test_4_paths.py</code></td><td>~6h</td></tr>
+    <tr><td><strong>Người 3</strong><br><small>AI + Ranking</small></td><td>Hard filter, weighted scoring, LLM explanation, fallback handler</td><td><code>/src/constraint_filter.py</code><br><code>/src/ranking_engine.py</code><br><code>/src/fallback_handler.py</code></td><td>~6h</td></tr>
+    <tr><td><strong>Người 4</strong><br><small>UI + Demo</small></td><td>Static mockup → card UI → correction flow → swap API → demo</td><td><code>/app.py</code> hoặc <code>/frontend/</code><br><code>/docs/demo_script.md</code></td><td>~6h</td></tr>
   </table>
+  <div class="callout success" style="margin-top:18px">
+    <strong>So với plan cũ:</strong> Người 3 không còn ôm parser + FastAPI — giảm từ ~10h xuống ~6h. Người 1 trở thành glue engineer thay vì chỉ làm docs. Người 4 bắt đầu song song từ đầu. Người 2 nhận thêm test vì hiểu parser nhất.
+  </div>
 </section>
 
     <div class="footer">VinDine Concierge · Thin SPEC · Repo-ready HTML</div>
