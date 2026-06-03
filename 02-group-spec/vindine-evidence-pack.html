@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VinDine Concierge — Evidence Pack</title>
+  <style>
+:root {
+  --bg: #fff8ef;
+  --paper: #ffffff;
+  --ink: #1f2937;
+  --muted: #667085;
+  --brand: #ff6b35;
+  --brand2: #f7931e;
+  --dark: #1f2933;
+  --green: #12b76a;
+  --blue: #2563eb;
+  --red: #ef4444;
+  --purple: #7c3aed;
+  --yellow: #f59e0b;
+  --line: #efd8c7;
+  --soft: #fff1e6;
+  --soft2: #f8fafc;
+  --radius: 24px;
+  --shadow: 0 22px 60px rgba(79, 45, 18, .13);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--ink); line-height: 1.65;
+  background:
+    radial-gradient(circle at top left, rgba(255,107,53,.22), transparent 27%),
+    radial-gradient(circle at top right, rgba(247,147,30,.16), transparent 28%),
+    linear-gradient(180deg, #fff8ef 0%, #fffdf8 46%, #ffffff 100%);
+}
+.page { width: min(1180px, calc(100% - 38px)); margin: 0 auto; padding: 34px 0 72px; }
+.hero { position: relative; overflow: hidden; color: white; background: linear-gradient(135deg, #171f2a 0%, #3b2418 48%, #ff6b35 145%); border-radius: 34px; padding: 56px; box-shadow: var(--shadow); }
+.hero:after { content:""; position:absolute; width:420px; height:420px; border-radius:50%; right:-150px; top:-160px; background:rgba(255,255,255,.12); }
+.hero-grid { display:grid; grid-template-columns:1fr; gap:34px; position:relative; z-index:1; align-items:center; }
+.badge { display:inline-flex; align-items:center; gap:8px; padding:8px 14px; border-radius:999px; background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.24); font-weight:800; font-size:14px; letter-spacing:.2px; backdrop-filter: blur(10px); }
+h1 { font-size: clamp(40px, 6vw, 76px); line-height:.95; letter-spacing:-2.5px; margin:24px 0 18px; }
+.subtitle { color: rgba(255,255,255,.86); font-size:20px; max-width:860px; }
+.metrics { display:grid; grid-template-columns: repeat(4, 1fr); gap:14px; margin-top:18px; }
+.metric { background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.18); border-radius:18px; padding:14px; }
+.metric strong { display:block; font-size:24px; line-height:1; }
+.metric span { color:rgba(255,255,255,.78); font-size:13px; }
+.nav { display:flex; flex-wrap:wrap; gap:10px; margin:22px 0 8px; }
+.nav a { color:#7c2d12; background:white; border:1px solid var(--line); text-decoration:none; padding:9px 12px; border-radius:999px; font-weight:800; font-size:13px; box-shadow:0 8px 20px rgba(79,45,18,.06); }
+section { margin-top:24px; }
+.card { background:var(--paper); border:1px solid var(--line); border-radius:var(--radius); padding:28px; box-shadow:0 10px 30px rgba(79,45,18,.06); }
+.section-title { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+.icon { width:42px; height:42px; display:grid; place-items:center; border-radius:14px; background:var(--soft); color:var(--brand); font-size:22px; flex:0 0 auto; }
+h2 { font-size:28px; line-height:1.2; letter-spacing:-.6px; }
+h3 { font-size:19px; margin:18px 0 8px; }
+p { color:var(--muted); }
+.lead { color:var(--ink); font-size:18px; }
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+.grid-3 { display:grid; grid-template-columns:repeat(3, 1fr); gap:18px; }
+.mini { background:var(--soft2); border:1px solid #e7edf3; border-radius:18px; padding:18px; }
+.mini strong { color:var(--ink); }
+.mini p { margin-top:4px; }
+.tag-row { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+.tag { display:inline-flex; align-items:center; gap:6px; padding:7px 10px; border-radius:999px; font-size:13px; font-weight:800; background:#eef4ff; color:#1849a9; }
+.tag.green { background:#ecfdf3; color:#027a48; }
+.tag.red { background:#fef3f2; color:#b42318; }
+.tag.orange { background:#fff7ed; color:#c2410c; }
+.tag.purple { background:#f3e8ff; color:#6d28d9; }
+.tag.blue { background:#eff6ff; color:#1d4ed8; }
+table { width:100%; border-collapse:collapse; overflow:hidden; border-radius:18px; margin-top:12px; }
+th, td { padding:14px 15px; border-bottom:1px solid #edf2f7; text-align:left; vertical-align:top; }
+th { background:#fff7ed; color:#7c2d12; font-size:13px; text-transform:uppercase; letter-spacing:.4px; }
+td { color:var(--muted); }
+tr:last-child td { border-bottom:0; }
+.callout { border-left:5px solid var(--brand); background:#fff7ed; border-radius:18px; padding:18px; }
+.warning { border-left-color:var(--red); background:#fff4f3; }
+.success { border-left-color:var(--green); background:#ecfdf3; }
+.bluebox { border-left-color:var(--blue); background:#eff6ff; }
+.codebox { background:#111827; color:#e5e7eb; border-radius:18px; padding:18px; overflow-x:auto; font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:14px; line-height:1.65; white-space:pre-wrap; }
+.flow { display:grid; grid-template-columns:repeat(7, 1fr); gap:10px; align-items:stretch; }
+.step { background:linear-gradient(180deg, #fff, #fff7ed); border:1px solid var(--line); border-radius:18px; padding:16px 12px; text-align:center; font-weight:900; font-size:14px; min-height:88px; display:grid; place-items:center; }
+.path-card { border:1px solid #e7edf3; border-radius:20px; padding:18px; background:white; }
+.path-card h3 { margin-top:0; display:flex; align-items:center; gap:8px; }
+.path-num { width:28px; height:28px; border-radius:9px; display:inline-grid; place-items:center; background:#111827; color:white; font-size:14px; }
+.owner-grid { display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; }
+.owner { background:#fff; border:1px dashed #f3b391; border-radius:20px; padding:18px; }
+.owner strong { display:block; font-size:18px; }
+.owner span { color:var(--muted); font-size:14px; }
+.footer { text-align:center; color:var(--muted); margin-top:34px; font-size:14px; }
+@media (max-width: 900px) { .hero { padding:34px; } .grid-2, .grid-3, .owner-grid { grid-template-columns:1fr; } .metrics { grid-template-columns:repeat(2, 1fr); } .flow { grid-template-columns:1fr; } h1 { letter-spacing:-1.2px; } }
+@media print { body { background:white; } .nav { display:none; } .card, .hero { box-shadow:none; break-inside:avoid; } .page { width:100%; padding:0; } }
+</style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <div class="hero-grid">
+        <div>
+          <div class="badge">📦 Evidence Pack · Day 05 · AUGMENT</div>
+          <h1>VinDine Evidence Pack</h1>
+          <p class="subtitle">Bằng chứng và insight cho prototype AI tìm quán ăn trong khu nghỉ dưỡng Vin, chuyển hướng từ GroupBite sang bối cảnh resort nội khu.</p>
+          <div class="metrics"><div class="metric"><strong>Track</strong><span>Travel & Hospitality</span></div><div class="metric"><strong>User</strong><span>Gia đình/nhóm nghỉ dưỡng</span></div><div class="metric"><strong>Decision</strong><span>AUGMENT</span></div><div class="metric"><strong>Output</strong><span>Top 3 + trade-off</span></div></div>
+        </div>
+      </div>
+    </header>
+    <nav class="nav"><a href="#group">Nhóm</a><a href="#self">Self-use</a><a href="#user">User evidence</a><a href="#competitor">Competitor</a><a href="#insight">Insight</a><a href="#change">SPEC change</a></nav>
+    
+<section id="group" class="card">
+  <div class="section-title"><div class="icon">🧾</div><h2>1. Nhóm và track</h2></div>
+  <table>
+    <tr><th>Mục</th><th>Nội dung</th></tr>
+    <tr><td>Tên nhóm</td><td>VinDine Concierge Team</td></tr>
+    <tr><td>Track</td><td>Travel & Hospitality / Food Decision Support</td></tr>
+    <tr><td>Product/app đã chọn</td><td><strong>VinDine Concierge</strong> — AI trợ lý tìm quán ăn trong khu nghỉ dưỡng Vin/Vinpearl cho gia đình hoặc nhóm đi nghỉ.</td></tr>
+    <tr><td>Build slice đang nghĩ</td><td>Một người đại diện nhập nhu cầu nhóm, vị trí trong resort, voucher/budget, dietary/accessibility; AI trả Top 3 nhà hàng nội khu + lý do + trade-off + fallback.</td></tr>
+  </table>
+</section>
+
+<section id="self" class="card">
+  <div class="section-title"><div class="icon">🔎</div><h2>2. Self-use evidence</h2></div>
+  <p class="lead">Nhóm tự mô phỏng tình huống gia đình đang ở khu nghỉ dưỡng Vin, cần chọn nơi ăn mà không muốn rời resort hoặc đi bộ quá xa.</p>
+  <table>
+    <tr><th>Observation</th><th>Screenshot/link</th><th>Path liên quan</th><th>Điều học được</th></tr>
+    <tr><td>Tìm “quán ăn gần mình” cho resort thường trả về danh sách rộng ngoài khu, khó biết quán nào thật sự nằm trong nội khu và đi bộ được.</td><td><code>/assets/screenshots/self-use-map-search.png</code></td><td>Low-confidence</td><td>AI cần hỏi/nhận vị trí nội khu, không chỉ dùng địa danh chung.</td></tr>
+    <tr><td>Nhóm có trẻ em, ông bà, người ăn kiêng và voucher; chọn một quán theo rating không giải quyết được xung đột khẩu vị.</td><td><code>/assets/screenshots/group-constraints-note.png</code></td><td>Happy / Correction</td><td>Phải tách hard constraints và soft preferences trước khi rank.</td></tr>
+    <tr><td>Khi budget quá thấp so với mặt bằng nội khu, app filter thường trả “không có kết quả” mà không chỉ đường thoát.</td><td><code>/assets/screenshots/no-match-budget.png</code></td><td>Failure</td><td>Failure path phải có fallback: tăng budget, đổi loại món, kiosk gần nhất, hoặc combo nhiều điểm bán.</td></tr>
+  </table>
+</section>
+
+<section id="user" class="card">
+  <div class="section-title"><div class="icon">👥</div><h2>3. User / review / social evidence</h2></div>
+  <table>
+    <tr><th>Quote / review / observation</th><th>Nguồn</th><th>User là ai?</th><th>Pain/failure mode</th></tr>
+    <tr><td>“Đi với gia đình đông người thì không biết chỗ nào vừa có món trẻ con ăn được vừa hợp người lớn.”</td><td>Phỏng vấn nhanh / giả lập cần kiểm chứng trước M1 Day 06</td><td>Phụ huynh tổ chức chuyến đi</td><td>Constraint conflict</td></tr>
+    <tr><td>“Voucher có nhưng không rõ nhà hàng nào nhận, đến nơi mới biết không áp dụng.”</td><td>Observation từ self-use workflow</td><td>Khách đã mua combo nghỉ dưỡng</td><td>Payment/voucher uncertainty</td></tr>
+    <tr><td>“Trong resort đi thêm vài trăm mét cũng mệt vì có trẻ nhỏ và người già.”</td><td>Observation từ nhóm tự dùng kịch bản</td><td>Gia đình đa thế hệ</td><td>Distance/accessibility risk</td></tr>
+  </table>
+  <div class="callout warning" style="margin-top:18px">
+    <strong>Ghi chú kiểm chứng:</strong> Đây là giả định có cơ sở từ self-use. Nhóm sẽ kiểm bằng 3 phỏng vấn nhanh với người từng đi Vinpearl/VinWonders trước checkpoint M1 Day 06.
+  </div>
+</section>
+
+<section id="competitor" class="card">
+  <div class="section-title"><div class="icon">🧭</div><h2>4. Competitor / analog evidence</h2></div>
+  <table>
+    <tr><th>App / mô hình tham khảo</th><th>Họ xử lý task này thế nào?</th><th>Pattern học được</th><th>Có áp dụng trong 1 ngày không?</th></tr>
+    <tr><td>Google Maps</td><td>Hiển thị quán gần, rating, giờ mở cửa, đường đi.</td><td>Mạnh ở khám phá địa điểm nhưng yếu ở constraint nhóm, voucher, accessibility nội khu.</td><td>Có — dùng pattern card Top 3 + distance text, không build map.</td></tr>
+    <tr><td>GrabFood / ShopeeFood</td><td>Lọc món, giá, delivery, voucher.</td><td>Voucher và tag món rất quan trọng, nhưng không giải quyết đi bộ nội khu và nhóm đa thế hệ.</td><td>Có — dataset mock có field voucher/menu_tags/avg_price.</td></tr>
+    <tr><td>Concierge khách sạn</td><td>Hỏi nhu cầu, gợi ý lựa chọn phù hợp, giải thích trade-off.</td><td>AI nên hành xử như concierge: hỏi lại khi thiếu thông tin, không giả vờ chắc.</td><td>Có — dùng LLM explanation và clarification path.</td></tr>
+  </table>
+</section>
+
+<section id="insight" class="card">
+  <div class="section-title"><div class="icon">💡</div><h2>5. Evidence → Insight</h2></div>
+  <div class="codebox">Evidence nổi bật nhất:
+Gia đình/nhóm trong khu nghỉ dưỡng không chỉ cần danh sách nhà hàng gần nhất. Họ cần biết nơi nào thật sự phù hợp với voucher, trẻ em, người lớn tuổi, dietary và khoảng cách đi bộ.
+
+Insight:
+User không chỉ gặp surface problem “không biết ăn ở đâu”.
+Thật ra họ cần hỗ trợ ra quyết định an toàn trong bối cảnh thông tin nội khu không đầy đủ và nhóm có nhiều constraint xung đột.
+
+Opportunity:
+AI có thể giúp bằng cách augment hành động hẹp: tách nhu cầu nhóm thành constraint, lọc hard constraints, rank Top 3 và giải thích trade-off.</div>
+</section>
+
+<section id="change" class="card">
+  <div class="section-title"><div class="icon">🔁</div><h2>6. Evidence đổi SPEC như thế nào?</h2></div>
+  <div class="grid-2">
+    <div class="mini"><strong>Đổi user chính</strong><p>Từ nhóm bạn đi ăn ngoài phố sang người đại diện gia đình/nhóm đang ở khu nghỉ dưỡng Vin.</p></div>
+    <div class="mini"><strong>Đổi pain statement</strong><p>Từ “quá nhiều quán ngoài phố” sang “không biết quán nội khu nào phù hợp với voucher, khoảng cách và nhóm đa thế hệ”.</p></div>
+    <div class="mini"><strong>Đổi build slice</strong><p>Giữ flow 1 người đại diện nhập thay nhóm, nhưng dataset là nhà hàng/kiosk trong resort.</p></div>
+    <div class="mini"><strong>Đổi failure mode</strong><p>Rủi ro lớn nhất là AI gợi ý quán không nhận voucher, quá xa, hoặc không phù hợp trẻ em/người già.</p></div>
+  </div>
+  <div class="callout success" style="margin-top:18px">
+    <strong>Trước evidence:</strong> nhóm định làm GroupBite chọn quán ăn ngoài phố. <br>
+    <strong>Sau evidence:</strong> nhóm đổi thành VinDine Concierge cho bối cảnh resort nội khu. <br>
+    <strong>Lý do:</strong> bối cảnh Vin có constraint rõ hơn, demo dễ hơn, và AI decision có giá trị hơn filter thông thường.
+  </div>
+</section>
+
+    <div class="footer">VinDine Concierge · Evidence Pack · Repo-ready HTML</div>
+  </main>
+</body>
+</html>
