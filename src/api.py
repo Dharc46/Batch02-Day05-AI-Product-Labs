@@ -12,6 +12,8 @@ from src.mock_ranking import rank_restaurants_stub
 from src.schemas import (
     ApiErrorResponse,
     ClarificationQuestion,
+    ErrorRoute,
+    HumanRole,
     RecommendationRequest,
     RecommendationResponse,
     Restaurant,
@@ -111,6 +113,46 @@ def _clarification_questions(request: RecommendationRequest, confidence: float) 
     return questions[:2]
 
 
+def _error_route(
+    status: str,
+    fallback_suggestions: list[str],
+    has_risky_recommendation: bool,
+) -> ErrorRoute | None:
+    if status == "needs_clarification":
+        return ErrorRoute(
+            type="low_confidence",
+            user_message="Mình cần thêm thông tin trước khi chốt gợi ý đáng tin cậy.",
+            next_action="ask_clarification",
+            recover_options=[
+                "Cho biết khu/sảnh hiện tại",
+                "Cho biết loại voucher nếu có",
+                "Nêu rõ ngân sách hoặc khẩu vị ưu tiên",
+            ],
+            learning_signal="Parser thiếu context quan trọng như vị trí hoặc voucher_type.",
+        )
+    if status == "no_match":
+        return ErrorRoute(
+            type="no_match",
+            user_message="Chưa tìm thấy lựa chọn thỏa các điều kiện cứng hiện tại.",
+            next_action="relax_constraint",
+            recover_options=fallback_suggestions,
+            learning_signal="Ranking không có candidate sau hard filters.",
+        )
+    if has_risky_recommendation:
+        return ErrorRoute(
+            type="risky_recommendation",
+            user_message="Có gợi ý dùng được nhưng còn trade-off cần người dùng kiểm tra.",
+            next_action="human_review",
+            recover_options=[
+                "Kiểm tra lại voucher tại quầy",
+                "Xác nhận nhóm chấp nhận khoảng cách đi bộ",
+                "Kiểm tra dietary/menu trước khi đi",
+            ],
+            learning_signal="Top recommendation có missing_info hoặc trade_offs đáng chú ý.",
+        )
+    return None
+
+
 @app.post("/recommend", response_model=RecommendationResponse)
 def recommend(request: RecommendationRequest) -> RecommendationResponse:
     """Parse a group request, rank restaurants, and return cards or fallback guidance."""
@@ -126,12 +168,24 @@ def recommend(request: RecommendationRequest) -> RecommendationResponse:
     else:
         status = "success"
 
+    has_risky_recommendation = any(
+        card.missing_info
+        or any(
+            keyword in trade_off.lower()
+            for keyword in ["xa", "voucher", "dietary", "khong dung", "không dùng"]
+            for trade_off in card.trade_offs
+        )
+        for card in recommendations
+    )
+
     return RecommendationResponse(
         status=status,
         parsed_constraints=parsed_constraints,
         clarification_questions=clarification_questions,
         recommendations=recommendations,
         fallback_suggestions=fallback_suggestions,
+        error_route=_error_route(status, fallback_suggestions, has_risky_recommendation),
+        human_role=HumanRole(),
         debug={
             "parser": "parse_user_text_stub",
             "ranker": "rank_restaurants_stub",

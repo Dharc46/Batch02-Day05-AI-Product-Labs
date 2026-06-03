@@ -8,6 +8,9 @@ from pydantic import BaseModel, Field, field_validator
 PriceTier = Literal["budget", "mid", "premium", "luxury"]
 SourceStatus = Literal["verified_name", "realistic_mock", "synthetic"]
 ResponseStatus = Literal["success", "needs_clarification", "no_match", "error"]
+ConfidenceLabel = Literal["low", "medium", "high"]
+ErrorRouteType = Literal["low_confidence", "no_match", "risky_recommendation", "missing_data"]
+NextAction = Literal["ask_clarification", "relax_constraint", "show_fallback", "human_review"]
 
 
 class GroupSuitability(BaseModel):
@@ -103,6 +106,9 @@ class RecommendationCard(BaseModel):
     trade_offs: list[str]
     least_satisfied_person: str | None = None
     confidence: float = Field(ge=0, le=1)
+    confidence_label: ConfidenceLabel
+    missing_info: list[str] = Field(default_factory=list)
+    assumptions: list[str] = Field(default_factory=list)
     source_status: SourceStatus
 
 
@@ -112,12 +118,29 @@ class ClarificationQuestion(BaseModel):
     options: list[str] = Field(default_factory=list)
 
 
+class ErrorRoute(BaseModel):
+    type: ErrorRouteType
+    user_message: str
+    next_action: NextAction
+    recover_options: list[str]
+    learning_signal: str | None = None
+
+
+class HumanRole(BaseModel):
+    decider: str = "Người đại diện nhóm chọn quán cuối cùng"
+    reviewer: str = "Người dùng kiểm tra voucher/khoảng cách/dietary trước khi đi"
+    rescuer: str = "Người dùng reject gợi ý sai và yêu cầu re-rank"
+    trainer: str = "Correction được log để cải thiện ranking"
+
+
 class RecommendationResponse(BaseModel):
     status: ResponseStatus
     parsed_constraints: ParsedConstraints
     clarification_questions: list[ClarificationQuestion] = Field(default_factory=list)
     recommendations: list[RecommendationCard] = Field(default_factory=list)
     fallback_suggestions: list[str] = Field(default_factory=list)
+    error_route: ErrorRoute | None = None
+    human_role: HumanRole = Field(default_factory=HumanRole)
     debug: dict[str, Any] | None = None
 
 

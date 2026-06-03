@@ -40,6 +40,8 @@ Key models live in `src/schemas.py`:
 - `RecommendationCard`
 - `RecommendationResponse`
 - `ClarificationQuestion`
+- `ErrorRoute`
+- `HumanRole`
 - `ApiErrorResponse`
 
 ## Endpoints
@@ -76,11 +78,21 @@ Response shape:
       "name": "Gateway Restaurant",
       "fit_score": 130,
       "rank": 1,
+      "confidence_label": "medium",
+      "missing_info": [],
+      "assumptions": [],
       "reasons": ["Khớp voucher yêu cầu"],
       "trade_offs": []
     }
   ],
   "fallback_suggestions": [],
+  "error_route": null,
+  "human_role": {
+    "decider": "Người đại diện nhóm chọn quán cuối cùng",
+    "reviewer": "Người dùng kiểm tra voucher/khoảng cách/dietary trước khi đi",
+    "rescuer": "Người dùng reject gợi ý sai và yêu cầu re-rank",
+    "trainer": "Correction được log để cải thiện ranking"
+  },
   "debug": {}
 }
 ```
@@ -92,3 +104,10 @@ Person 2 can replace `parse_user_text_stub(request)` in `src/mock_parser.py` as 
 Person 3 can replace `rank_restaurants_stub(restaurants, constraints)` in `src/mock_ranking.py` as long as it returns `(list[RecommendationCard], list[str])`.
 
 The UI can integrate against `POST /recommend` immediately. Even low-confidence requests return parsed constraints and may include recommendation cards plus clarification questions.
+
+Day 05 product guardrails:
+
+- Low confidence returns `status = "needs_clarification"` and `error_route.type = "low_confidence"`.
+- No candidate returns `status = "no_match"` and `error_route.type = "no_match"`.
+- Cards expose `confidence_label`, `missing_info`, and `assumptions` so the UI does not present AI output as certain when location, voucher, dietary, or walking-distance details are missing.
+- `human_role` defines the user's role as final decider, reviewer, rescuer, and trainer.

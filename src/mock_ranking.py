@@ -1,6 +1,6 @@
 """Temporary ranking logic for UI and API integration testing."""
 
-from src.schemas import ParsedConstraints, RecommendationCard, Restaurant
+from src.schemas import ConfidenceLabel, ParsedConstraints, RecommendationCard, Restaurant
 
 
 FALLBACK_SUGGESTIONS = [
@@ -46,6 +46,40 @@ def _least_satisfied_person(restaurant: Restaurant, constraints: ParsedConstrain
     if constraints.needs_stroller and not restaurant.stroller_accessible:
         return "Gia dinh co xe day"
     return None
+
+
+def _confidence_label(confidence: float) -> ConfidenceLabel:
+    if confidence < 0.6:
+        return "low"
+    if confidence < 0.8:
+        return "medium"
+    return "high"
+
+
+def _card_uncertainty(restaurant: Restaurant, constraints: ParsedConstraints) -> tuple[list[str], list[str]]:
+    missing_info: list[str] = []
+    assumptions: list[str] = []
+
+    if not constraints.current_zone:
+        missing_info.append("current_zone")
+        assumptions.append("Chưa biết vị trí hiện tại nên khoảng cách chỉ dùng distance_minutes mặc định của dataset.")
+    if constraints.voucher_required and not constraints.voucher_type:
+        missing_info.append("voucher_type")
+        assumptions.append("Chưa biết loại voucher cụ thể nên chỉ kiểm tra accept_voucher tổng quát.")
+    if constraints.voucher_required and not _voucher_match(restaurant, constraints):
+        missing_info.append("voucher_validation")
+        assumptions.append("Voucher cần được người dùng kiểm tra lại trước khi di chuyển.")
+    if constraints.dietary_needs and not set(constraints.dietary_needs).issubset(restaurant.dietary_tags):
+        missing_info.append("dietary_validation")
+        assumptions.append("Dietary tag chưa khớp hoàn toàn, cần kiểm tra menu thực tế.")
+    if restaurant.distance_minutes > 15:
+        missing_info.append("walking_distance_confirmation")
+        assumptions.append("Quán khá xa, cần người dùng xác nhận nhóm có muốn đi bộ thêm không.")
+    if constraints.quiet_preferred and restaurant.crowd_level >= 4:
+        missing_info.append("crowd_level_now")
+        assumptions.append("Độ đông hiện tại có thể khác dataset, nên cần kiểm tra tại thời điểm đi.")
+
+    return missing_info, assumptions
 
 
 def _score_restaurant(restaurant: Restaurant, constraints: ParsedConstraints) -> tuple[float, list[str], list[str]]:
@@ -130,6 +164,10 @@ def rank_restaurants_stub(
     scored.sort(key=lambda item: item[0], reverse=True)
     recommendations: list[RecommendationCard] = []
     for rank, (score, restaurant, reasons, trade_offs) in enumerate(scored[:3], start=1):
+        missing_info, assumptions = _card_uncertainty(restaurant, constraints)
+        confidence = max(0.5, min(0.95, constraints.confidence + score / 500))
+        if missing_info:
+            confidence = min(confidence, 0.79)
         recommendations.append(
             RecommendationCard(
                 restaurant_id=restaurant.id,
@@ -145,7 +183,10 @@ def rank_restaurants_stub(
                 reasons=reasons,
                 trade_offs=trade_offs,
                 least_satisfied_person=_least_satisfied_person(restaurant, constraints),
-                confidence=max(0.5, min(0.95, constraints.confidence + score / 500)),
+                confidence=confidence,
+                confidence_label=_confidence_label(confidence),
+                missing_info=missing_info,
+                assumptions=assumptions,
                 source_status=restaurant.source_status,
             )
         )

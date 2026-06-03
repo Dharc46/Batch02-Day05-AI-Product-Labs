@@ -50,6 +50,11 @@ def test_recommend_happy_path_has_parsed_constraints():
     assert body["parsed_constraints"]["needs_stroller"] is True
     assert body["parsed_constraints"]["voucher_required"] is True
     assert body["recommendations"]
+    first_card = body["recommendations"][0]
+    assert first_card["confidence_label"] in {"low", "medium", "high"}
+    assert "missing_info" in first_card
+    assert "assumptions" in first_card
+    assert body["human_role"]["decider"] == "Người đại diện nhóm chọn quán cuối cùng"
 
 
 def test_recommend_low_confidence_needs_clarification():
@@ -62,6 +67,10 @@ def test_recommend_low_confidence_needs_clarification():
     body = response.json()
     assert body["status"] == "needs_clarification"
     assert body["clarification_questions"]
+    assert body["error_route"]["type"] == "low_confidence"
+    assert body["error_route"]["next_action"] == "ask_clarification"
+    assert body["recommendations"][0]["confidence"] < 1
+    assert "current_zone" in body["recommendations"][0]["missing_info"]
 
 
 def test_recommend_failure_returns_no_match_or_fallbacks():
@@ -79,3 +88,6 @@ def test_recommend_failure_returns_no_match_or_fallbacks():
     assert response.status_code == 200
     body = response.json()
     assert body["status"] == "no_match" or body["fallback_suggestions"]
+    if body["status"] == "no_match":
+        assert body["error_route"]["type"] == "no_match"
+        assert body["error_route"]["next_action"] == "relax_constraint"
