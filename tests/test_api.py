@@ -23,6 +23,21 @@ def test_restaurants_returns_list():
     assert isinstance(response.json(), list)
 
 
+def test_restaurant_detail_returns_record_by_id():
+    response = client.get("/restaurants/gateway-restaurant")
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["id"] == "gateway-restaurant"
+    assert body["name"] == "Gateway Restaurant"
+
+
+def test_restaurant_detail_returns_404_for_unknown_id():
+    response = client.get("/restaurants/not-a-real-restaurant")
+
+    assert response.status_code == 404
+
+
 def test_dataset_summary_returns_total_count():
     response = client.get("/dataset/summary")
 

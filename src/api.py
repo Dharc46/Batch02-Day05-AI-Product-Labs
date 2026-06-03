@@ -86,6 +86,15 @@ def list_restaurants(
     return restaurants
 
 
+@app.get("/restaurants/{restaurant_id}", response_model=Restaurant)
+def get_restaurant(restaurant_id: str) -> Restaurant:
+    """Return one restaurant by id for card detail views."""
+    for restaurant in _restaurants_or_500():
+        if restaurant.id == restaurant_id:
+            return restaurant
+    raise HTTPException(status_code=404, detail=f"Restaurant not found: {restaurant_id}")
+
+
 @app.get("/dataset/summary")
 def dataset_summary() -> dict:
     """Return aggregate counts proving the dataset is diverse enough for demos."""
