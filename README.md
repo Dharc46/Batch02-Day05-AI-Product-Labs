@@ -79,3 +79,33 @@ prototype dùng AI để hỏi 3 câu và gợi ý 2-3 chuyên khoa phù hợp,
 ---
 
 *Day 05 Lab — Batch 02 · AI Product Kickoff Sprint*
+## VinDine Concierge Backend
+
+Repo nay co them slice **Person 1 - Data + Glue** cho MVP VinDine Concierge:
+
+- Dataset realistic mock: `data/vin_restaurants.json`
+- FastAPI app: `src/api.py`
+- Parser/ranking stubs: `src/mock_parser.py`, `src/mock_ranking.py`
+- API contract docs: `docs/person1_data_glue.md`
+- Example request payloads: `docs/recommend_examples.json`
+
+Chay API:
+
+```bash
+pip install -r requirements.txt
+uvicorn src.api:app --reload
+```
+
+Neu dung Windows va `uvicorn` khong nam tren PATH:
+
+```powershell
+py -m uvicorn src.api:app --reload
+```
+
+Test:
+
+```bash
+pytest
+```
+
+Docs API: `http://127.0.0.1:8000/docs`

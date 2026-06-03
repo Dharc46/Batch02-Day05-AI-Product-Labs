@@ -19,7 +19,7 @@ pytest
 
 ## Dataset
 
-`data/vin_restaurants.json` contains 36 realistic mock/synthetic dining records across:
+`data/vin_restaurants.json` contains 41 realistic mock/synthetic dining records across:
 
 - VinWonders Nha Trang
 - Vinpearl Harbour Nha Trang
